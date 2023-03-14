@@ -1,0 +1,1 @@
+alter table tutores add email varchar(100) not null unique;
