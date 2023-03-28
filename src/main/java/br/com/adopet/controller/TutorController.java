@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tutores")
@@ -19,7 +20,7 @@ public class TutorController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroTutor dados, UriComponentsBuilder uriBuilder){
+    public ResponseEntity cadastrarTutor(@RequestBody @Valid DadosCadastroTutor dados, UriComponentsBuilder uriBuilder){
         var tutor = new Tutor(dados);
         repository.save(tutor);
 
@@ -29,19 +30,23 @@ public class TutorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DadosListagemTutor>> listar(){
+    public ResponseEntity<List<DadosListagemTutor>> listarTutores(){
         var lista= repository.findAll().stream().map(DadosListagemTutor::new).toList();
         return ResponseEntity.ok(lista);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<DadosDetalhamentoTutor> listarPeloId(@PathVariable Long id){
-        return ResponseEntity.ok(new DadosDetalhamentoTutor(repository.getReferenceById(id)));
+    public ResponseEntity<DadosDetalhamentoTutor> listarTutorPeloId(@PathVariable Long id){
+        Optional<Tutor> tutorOptional = repository.findById(id);
+        if(tutorOptional.isPresent())
+            return ResponseEntity.ok(new DadosDetalhamentoTutor(tutorOptional.get()));
+
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoTutor dados){
+    public ResponseEntity atualizarTutor(@RequestBody @Valid DadosAtualizacaoTutor dados){
         var tutor = repository.getReferenceById(dados.id());
         tutor.atualizarInformacoes(dados);
 
@@ -50,7 +55,7 @@ public class TutorController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
+    public ResponseEntity excluirTutor(@PathVariable Long id) {
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();
