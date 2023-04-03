@@ -1,11 +1,14 @@
 package br.com.adopet.domain.pet;
 
 import br.com.adopet.domain.abrigo.Abrigo;
+import br.com.adopet.domain.abrigo.AbrigoRepository;
+//import br.com.adopet.domain.adocao.Adocao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Table(name = "pets")
 @Entity(name = "Pet")
@@ -34,16 +37,20 @@ public class Pet{
     @JoinColumn(name="abrigo_id")
     private Abrigo abrigo;
 
-    public Pet(DadosCadastroPet dados) {
+//    @OneToOne(mappedBy = "animal", cascade = CascadeType.ALL,
+//            fetch = FetchType.LAZY, optional = true)
+//    private Adocao adocao;
+
+    public Pet(DadosCadastroPet dados, AbrigoRepository repository) {
         this.nome = dados.nome();
         this.idade = dados.idade();
         this.porte = dados.porte();
         this.descricao = dados.descricao();
         this.cidade = dados.cidade();
-        this.abrigo = dados.abrigo();
+        this.abrigo = repository.getReferenceById(dados.abrigoId());
     }
 
-    public void atualizarInformacoes(DadosAtualizacaoPet dados) {
+    public void atualizarInformacoes(DadosAtualizacaoPet dados, AbrigoRepository repository) {
         if(dados.nome() != null){
             this.nome = dados.nome();
         }
@@ -59,8 +66,8 @@ public class Pet{
         if(dados.cidade() != null){
             this.cidade = dados.cidade();
         }
-        if(dados.abrigo() != null){
-            this.abrigo = dados.abrigo();
+        if(dados.abrigoId() != null){
+            this.abrigo = repository.getReferenceById(dados.abrigoId());
         }
     }
 }

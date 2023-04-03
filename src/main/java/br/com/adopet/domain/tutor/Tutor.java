@@ -1,5 +1,6 @@
 package br.com.adopet.domain.tutor;
 
+//import br.com.adopet.domain.adocao.Adocao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,6 +29,10 @@ public class Tutor {
     private String cidade;
 
     private String sobre;
+
+//    @OneToOne(mappedBy = "tutor", cascade = CascadeType.ALL,
+//            fetch = FetchType.LAZY, optional = true)
+//    private Adocao adocao;
 
     public Tutor(DadosCadastroTutor dados) {
         this.nome = dados.nome();

@@ -1,6 +1,8 @@
 package br.com.adopet.controller;
 
 
+import br.com.adopet.domain.abrigo.Abrigo;
+import br.com.adopet.domain.abrigo.AbrigoRepository;
 import br.com.adopet.domain.pet.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,13 @@ public class PetController {
     @Autowired
     private PetRepository petRepository;
 
+    @Autowired
+    private AbrigoRepository abrigoRepository;
+
     @PostMapping
     @Transactional
     public ResponseEntity cadastrarPet(@RequestBody @Valid DadosCadastroPet dados, UriComponentsBuilder uriBuilder){
-        var pet = new Pet(dados);
+        var pet = new Pet(dados, abrigoRepository);
         petRepository.save(pet);
 
         var uri = uriBuilder.path("/abrigos/{id}").buildAndExpand(pet.getId()).toUri();
@@ -54,7 +59,7 @@ public class PetController {
     public ResponseEntity atualizarPet(DadosAtualizacaoPet dados){
         var pet = petRepository.getReferenceById(dados.id());
 
-        pet.atualizarInformacoes(dados);
+        pet.atualizarInformacoes(dados, abrigoRepository);
 
         return ResponseEntity.ok(new DadosDetalhamentoPet(pet));
 

@@ -22,5 +22,5 @@ public record DadosCadastroPet(
         String cidade,
 
         @NotNull
-        Abrigo abrigo
+        Long abrigoId
 ) {}
