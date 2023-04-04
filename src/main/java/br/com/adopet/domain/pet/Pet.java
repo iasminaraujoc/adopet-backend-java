@@ -2,7 +2,7 @@ package br.com.adopet.domain.pet;
 
 import br.com.adopet.domain.abrigo.Abrigo;
 import br.com.adopet.domain.abrigo.AbrigoRepository;
-//import br.com.adopet.domain.adocao.Adocao;
+import br.com.adopet.domain.adocao.Adocao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -36,10 +36,6 @@ public class Pet{
     @ManyToOne
     @JoinColumn(name="abrigo_id")
     private Abrigo abrigo;
-
-//    @OneToOne(mappedBy = "animal", cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY, optional = true)
-//    private Adocao adocao;
 
     public Pet(DadosCadastroPet dados, AbrigoRepository repository) {
         this.nome = dados.nome();
